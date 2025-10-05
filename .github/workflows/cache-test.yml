@@ -3,7 +3,7 @@ name: CI Cache Test
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # allow manual triggering
+  workflow_dispatch: # Allow manual triggering
 
 jobs:
   test-cache:
@@ -16,14 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: prime-cache-55de323
         id: cache
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cache/pip
+          path: ~/.cache/pip
           key: cache-55de323
 
       - name: Show cache result
@@ -31,8 +30,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found, skipping install."
+          fi
 
       - name: Run example tests
-        run: |
-          echo "✅ Tests completed!"
+        run: echo "✅ Tests completed successfully!"
+
